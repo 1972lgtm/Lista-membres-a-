@@ -2,10 +2,10 @@ import streamlit as st
 import pandas as pd
 import os
 
-# Nombre del archivo donde se guardan TODOS los registros centralizados
+# Nombre del archivo donde se guardaran TODOS los registros centralizados
 ARCHIVO_DATOS = "base_miembros.csv"
 
-# Contraseña secreta para administradores
+# Contrasena secreta para administradores
 CONTRASENA_ADMIN = "admin123"
 
 # Funciones para leer y escribir el archivo central
@@ -26,30 +26,28 @@ def guardar_datos(df):
 # Cargar los datos globales
 df_miembros = cargar_datos()
 
-# Configuración de la página
+# Configuracion de la pagina
 st.set_page_config(page_title="Membresias", layout="wide")
 st.title("Registro de Membresias Interactivo")
 
-# --- BARRA LATERAL (Panel de Administración Seguro) ---
+# --- BARRA LATERAL (Panel de Administracion Seguro) ---
 st.sidebar.title("🔐 Acceso Administrador")
-password_ingresado = st.sidebar.text_input("Ingrese la contraseña:", type="password")
+password_ingresado = st.sidebar.text_input("Ingrese la contrasenia:", type="password")
 
 # Verificar si es administrador
 es_admin = (password_ingresado == CONTRASENA_ADMIN)
 
-# Si es administrador, ve las pestañas de control. Si no, solo ve el formulario de registro.
 if es_admin:
-    st.sidebar.success("Sesión autorizada")
+    st.sidebar.success("Sesion autorizada")
     
-    # Muestra de la cifra numérica compartida en tiempo real
+    # Muestra de la cifra numerica compartida en tiempo real
     total_miembros = len(df_miembros)
     st.metric(label="Cantidad Total de Miembros Registrados", value=total_miembros)
     
-    # Organización en pestañas solo para admins
+    # Organizacion en pestanias solo para admins
     tab1, tab2, tab3 = st.tabs(["➕ Registrar Miembro", "🔄 Actualizar Datos", "📋 Ver Lista Completa"])
 else:
-    # Si no es admin, solo creamos la pestaña de registro de forma directa
-    st.sidebar.info("Área de registro para miembros activos.")
+    st.sidebar.info("Area de registro para miembros activos.")
     tab1 = st.container()
 
 # --- FORMULARIO DE REGISTRO (Visible para todos) ---
@@ -88,7 +86,7 @@ with tab1:
 
 # --- SECCIONES EXCLUSIVAS PARA ADMINISTRADORES ---
 if es_admin:
-    # --- PESTAÑA 2: ACTUALIZAR DATOS ---
+    # --- PESTANIA 2: ACTUALIZAR DATOS ---
     with tab2:
         st.subheader("Actualizar Datos de un Miembro")
         if not df_miembros.empty:
@@ -98,6 +96,7 @@ if es_admin:
             fila_filtrada = df_miembros[df_miembros["Cédula"] == cedula_sel]
             
             if not fila_filtrada.empty:
+                # Extraemos los datos de la fila de forma segura usando .iloc[0]
                 datos_act = fila_filtrada.iloc[0]
                 
                 u_nombre = st.text_input("Actualizar Nombre Completo:", value=str(datos_act["Nombre Completo"]))
@@ -121,12 +120,12 @@ if es_admin:
                     df_miembros.loc[df_miembros["Cédula"] == cedula_sel, "Tiempo de Conversión"] = u_conversion
                     
                     guardar_datos(df_miembros)
-                    st.success("¡Datos updated correctamente!")
+                    st.success("¡Datos actualizados correctamente!")
                     st.rerun()
         else:
             st.info("No hay miembros registrados para modificar.")
 
-    # --- PESTAÑA 3: VER LISTA COMPLETA ---
+    # --- PESTANIA 3: VER LISTA COMPLETA ---
     with tab3:
         st.subheader("Lista General de Miembros")
         st.dataframe(df_miembros, use_container_width=True)
