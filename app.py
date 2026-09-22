@@ -25,8 +25,10 @@ def guardar_datos(df):
 
 if "df_miembros" not in st.session_state:
     st.session_state["df_miembros"] = cargar_datos()
-    
+
 df_miembros = st.session_state["df_miembros"]
+
+
 
 # Configuracion de la pagina
 st.set_page_config(page_title="Membresias", layout="wide")
