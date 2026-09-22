@@ -23,8 +23,11 @@ def cargar_datos():
 def guardar_datos(df):
     df.to_csv(ARCHIVO_DATOS, index=False)
 
-# Cargar los datos globales
-df_miembros = cargar_datos()
+# Cargar los datos globales en la memoria de sesión para que no se borren
+if "df_miembros" no en calle.session_state:
+    calle.session_state["df_miembros"] = cargar_datos()
+
+df_miembros = calle.session_state["df_miembros"]
 
 # Configuracion de la pagina
 st.set_page_config(page_title="Membresias", layout="wide")
